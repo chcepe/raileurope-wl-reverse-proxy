@@ -140,3 +140,37 @@ test("localhost journey links restore the Omio production prefix", async () => {
     `${local}/app/search-frontend/journey/train/1/search/2?partnerId=raileurope`,
   );
 });
+
+
+test("approved User-Agent marker stays scoped to the Rail Europe upstream", async (t) => {
+  const originalMarker = process.env.OMIO_WAF_USER_AGENT_MARKER;
+  const originalUpstream = process.env.OMIO_UPSTREAM_ORIGIN;
+  process.env.OMIO_WAF_USER_AGENT_MARKER = "wafallow=test-marker";
+  process.env.OMIO_UPSTREAM_ORIGIN = upstream;
+  let outgoing = "";
+  t.mock.method(globalThis, "fetch", async (_url: URL, init: RequestInit) => {
+    outgoing = new Headers(init.headers).get("user-agent") || "";
+    return new Response("ok");
+  });
+  try {
+    const request = () => new Request(`${local}/app/results`, {
+      headers: { "user-agent": "Browser/1.0" },
+    });
+    const response = await proxyRequest(request());
+    assert.equal(outgoing, "Browser/1.0 wafallow=test-marker");
+    assert.equal(await response.text(), "ok");
+    assert.equal(response.headers.get("user-agent"), null);
+    process.env.OMIO_UPSTREAM_ORIGIN = "https://other.example";
+    await proxyRequest(request());
+    assert.equal(outgoing, "Browser/1.0");
+    process.env.OMIO_UPSTREAM_ORIGIN = upstream;
+    delete process.env.OMIO_WAF_USER_AGENT_MARKER;
+    await proxyRequest(request());
+    assert.equal(outgoing, "Browser/1.0");
+  } finally {
+    if (originalMarker === undefined) delete process.env.OMIO_WAF_USER_AGENT_MARKER;
+    else process.env.OMIO_WAF_USER_AGENT_MARKER = originalMarker;
+    if (originalUpstream === undefined) delete process.env.OMIO_UPSTREAM_ORIGIN;
+    else process.env.OMIO_UPSTREAM_ORIGIN = originalUpstream;
+  }
+});

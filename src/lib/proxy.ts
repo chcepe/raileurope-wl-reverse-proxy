@@ -122,6 +122,13 @@ export async function proxyRequest(request: Request): Promise<Response> {
     )
       headers.delete(key);
   }
+  // This marker identifies the approved proxy to Omio's Cloudflare rule.
+  // Keep it server-only and never send it to another configured upstream.
+  const wafMarker = process.env.OMIO_WAF_USER_AGENT_MARKER?.trim();
+  if (upstream.origin === defaultUpstream && wafMarker) {
+    const userAgent = headers.get("user-agent") || "RailEuropePOC/1.0";
+    headers.set("user-agent", `${userAgent} ${wafMarker}`);
+  }
   headers.set("accept-encoding", "identity");
   for (const name of ["origin", "referer"]) {
     const value = headers.get(name);

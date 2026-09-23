@@ -428,3 +428,22 @@ code {
 
 .integration-notes dt { margin-top: 16px; font-weight: 600; overflow-wrap: anywhere; }
 .integration-notes dd { margin: 4px 0 0; }
+
+.parameter-table-scroll {
+  overflow-x: auto;
+  margin-top: 18px;
+  border: 1px solid #e4dfe2;
+  border-radius: 12px;
+}
+.parameter-table { width: 100%; border-collapse: collapse; text-align: left; font-size: 14px; line-height: 1.6; }
+.parameter-table thead { background: #fff0f5; color: #930038; }
+.parameter-table th, .parameter-table td { padding: 16px 20px; vertical-align: top; }
+.parameter-table tbody tr + tr { border-top: 1px solid #e9e5e7; }
+.parameter-table tbody tr:nth-child(even) { background: #faf9fa; }
+.parameter-table th[scope="row"] { width: 42%; font-weight: 500; }
+.parameter-table code { display: inline-block; color: #930038; background: #fff0f5; border-radius: 5px; padding: 2px 6px; margin: 2px 0; overflow-wrap: anywhere; }
+.parameter-table td { color: #535963; }
+@media (max-width: 700px) {
+  .parameter-table th, .parameter-table td { padding: 12px; }
+  .parameter-table { font-size: 12px; }
+}

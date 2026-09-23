@@ -73,3 +73,7 @@ Branch notes live in ignored `tmp/<branch-name>/`. No real legal/contact details
 Rail Europe logo is taken from the configured whitelabel. Paris hero photo: [Unsplash](https://images.unsplash.com/photo-1502602898657-3e91760cbb34), served locally. Reference layout follows the supplied Rail Europe screenshot; no live review score or nonfunctional booking controls are reproduced.
 
 Diagram source: `public/integration-diagram.mmd`; rendered SVG: `public/integration-diagram.svg`. Rendering is static, with no Mermaid runtime or editor shipped to the browser. Regenerate the SVG with Mermaid CLI after changing the source, using `docs/mermaid.config.json` and the dark background `#0b1117`.
+
+### Approved Cloudflare proxy access
+
+Set `OMIO_WAF_USER_AGENT_MARKER` to the current `wafallow=…` value supplied by Omio in server-only environment settings. The proxy appends it to the outgoing User-Agent only for `https://raileurope.wl.omio.com`. Never use a `NEXT_PUBLIC_` variable or commit the value. Update the setting and redeploy when Omio rotates the marker.
