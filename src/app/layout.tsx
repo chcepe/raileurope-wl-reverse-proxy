@@ -42,8 +42,6 @@ export default function RootLayout({
           <span>A little closer to your next adventure.</span>
           <Link href="/blog">Discover</Link>
           <Link href="/imprint">Imprint</Link>
-          <Link href="/terms-and-conditions">Terms and Conditions</Link>
-          <Link href="/privacy-policy">Privacy Policy</Link>
           <Link href="/integration-overview">Integration Overview</Link>
           <small>Rail Europe × Omio · Integration demo</small>
         </footer>

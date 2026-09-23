@@ -89,7 +89,7 @@ export async function proxyRequest(request: Request): Promise<Response> {
 
   if (
     incoming.pathname.startsWith("/_next/") ||
-    ["/blog", "/imprint", "/diagram", "/integration-overview", "/terms-and-conditions", "/privacy-policy", "/"].includes(
+    ["/blog", "/imprint", "/diagram", "/integration-overview", "/"].includes(
       incoming.pathname.replace(/\/$/, "") || "/",
     )
   ) {

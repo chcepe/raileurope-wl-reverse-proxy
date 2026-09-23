@@ -31,7 +31,7 @@ Optional settings (copy `.env.example` to `.env.local` locally, or set in Vercel
 
 ## Routing and proxy behavior
 
-- `/`, `/blog`, `/imprint`, `/terms-and-conditions`, `/privacy-policy`, `/integration-overview` (with `/diagram` redirecting to it), local public assets, and Next.js assets belong to this project.
+- `/`, `/blog`, `/imprint`, `/integration-overview` (with `/diagram` redirecting to it), local public assets, and Next.js assets belong to this project.
 - All remaining paths go to the fixed upstream, including `/links/*`, `/app/*`, `/wl-*`, `/gcs-proxy/*`, and API paths. This fallback is deliberate: Omio’s dependencies extend beyond `/app/*`.
 - Search uses a full-page navigation to `/links/:id`. Omio’s loading page fetches `/links/:id/link`; the proxy rewrites its absolute JSON redirect to our origin.
 - Methods, query strings, bodies, statuses, and session cookies are forwarded. HTTP redirects and exact upstream-origin references in text are rewritten; third-party origins are preserved.
