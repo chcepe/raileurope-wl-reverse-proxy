@@ -40,12 +40,63 @@ export default function IntegrationOverview() {
         Download Mermaid source ↓
       </a>
       <div className="integration-notes">
+        <section aria-labelledby="search-parameters-title">
+          <h2 id="search-parameters-title">Search parameters: demo and production</h2>
+          <p>
+            For POC demo purposes, the search uses only four parameters:
+            <code> departurePosTerm</code>, <code>arrivalPosTerm</code>,
+            <code> departureDate</code>, and <code>passengerAges</code>.
+            This keeps the demo minimal; the Links integration supports the
+            additional parameters listed below.
+          </p>
+          <h3>Use position IDs in your station suggester</h3>
+          <p>
+            For the Rail Europe integration, prefer <code>departurePos</code> and
+            <code> arrivalPos</code> over free-text station terms. Map your stations
+            to the position IDs returned by Omio’s B2B API Positions endpoint and
+            expose those mapped stations in your search suggester. When a traveller
+            selects a suggestion, retain its position ID and send that ID in the
+            search link.
+          </p>
+          <p>
+            Use IDs for both departure and arrival, or terms for both; do not mix
+            an ID on one side with a term on the other. When both an ID and a term
+            are supplied for the same side, the ID takes precedence.
+          </p>
+          <h3>Supported link query parameters</h3>
+          <dl>
+            <dt><code>departurePos</code>, <code>arrivalPos</code></dt>
+            <dd>Numeric departure and arrival position IDs.</dd>
+            <dt><code>departurePosTerm</code>, <code>arrivalPosTerm</code></dt>
+            <dd>Departure and arrival city or town names, as an alternative to IDs.</dd>
+            <dt><code>departureDate</code>, <code>returnDate</code></dt>
+            <dd>Outbound and optional return dates in YYYY-MM-DD format.</dd>
+            <dt><code>earliestDepartureTime</code>, <code>arrivalTime</code></dt>
+            <dd>Earliest outbound departure time or outbound arrival time in HH:mm format.</dd>
+            <dt><code>earliestReturnDepartureTime</code>, <code>returnArrivalTime</code></dt>
+            <dd>Earliest return departure time or return arrival time in HH:mm format, for round trips.</dd>
+            <dt><code>passengerAges</code></dt>
+            <dd>Comma-separated passenger ages, for example 35,12.</dd>
+            <dt><code>travelMode</code></dt>
+            <dd>Travel mode: TRAIN, BUS, or FLIGHT.</dd>
+            <dt><code>locale</code>, <code>currency</code></dt>
+            <dd>Supported language/locale and currency codes.</dd>
+            <dt><code>provider</code></dt>
+            <dd>Provider ID used to pick the best journey match when landing on the Ticket Configuration Page.</dd>
+            <dt><code>label</code></dt>
+            <dd>Partner-specific tracking label.</dd>
+            <dt><code>abTestParameters</code></dt>
+            <dd>Comma-separated experiment parameters; coordinate their use with Omio.</dd>
+            <dt><code>segmentIds</code>, <code>returnSegmentIds</code></dt>
+            <dd>Comma-separated outbound or return journey segment IDs for exact journey matching when the segments are already known.</dd>
+          </dl>
+        </section>
         <section aria-labelledby="alignment-title">
           <h2 id="alignment-title">Agree the integration details with Omio</h2>
           <ul>
             <li><strong>Domains and routes.</strong> Share your test and production domains. Agree the full list of supporting API and asset paths, including any <code>/wl-*</code> and <code>/gcs-proxy/*</code> dependencies, and check for conflicts with existing Rail Europe routes.</li>
             <li><strong>Proxy access.</strong> Provide the outbound IP addresses for each environment if they are fixed. Otherwise, agree a secret header with Omio and inject it only on the server. Omio configures the corresponding access rule; the public website hostname alone is not sufficient proof of trusted proxy traffic.</li>
-            <li><strong>Search and navigation.</strong> Confirm the link ID and the search parameters: <code>departurePosTerm</code>, <code>arrivalPosTerm</code>, <code>departureDate</code>, and <code>passengerAges</code>. Link My Bookings to <code>/app/your-bookings</code> on your own domain.</li>
+            <li><strong>Search and navigation.</strong> Confirm the link ID, station-to-position mapping, and the search parameters your form will send. Link My Bookings to <code>/app/your-bookings</code> on your own domain.</li>
             <li><strong>Sessions and external services.</strong> Agree cookie handling, authentication callback URLs, and payment return URLs. Keep legitimate external payment and authentication destinations intact.</li>
           </ul>
         </section>

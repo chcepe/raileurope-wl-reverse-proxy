@@ -425,3 +425,6 @@ code {
 .integration-notes h2 { font-size: 22px; margin: 0 0 12px; }
 .integration-notes ul { padding-left: 22px; }
 .integration-notes li + li { margin-top: 12px; }
+
+.integration-notes dt { margin-top: 16px; font-weight: 600; overflow-wrap: anywhere; }
+.integration-notes dd { margin: 4px 0 0; }
