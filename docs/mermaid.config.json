@@ -1,0 +1,21 @@
+{
+  "theme": "base",
+  "themeVariables": {
+    "fontFamily": "Arial, sans-serif",
+    "fontSize": "15px",
+    "lineColor": "#78adff",
+    "edgeLabelBackground": "#0b1117",
+    "primaryTextColor": "#78adff",
+    "textColor": "#78adff",
+    "background": "#0b1117",
+    "titleColor": "#e3e8ef"
+  },
+  "flowchart": {
+    "htmlLabels": true,
+    "curve": "basis",
+    "nodeSpacing": 40,
+    "rankSpacing": 60,
+    "padding": 24
+  },
+  "themeCSS": ".node rect, .cluster rect { rx: 16px !important; ry: 16px !important; stroke-width: 1.25px; } .cluster-label span { color: #e3e8ef !important; } .nodeLabel p { line-height: 1.5; } .edgeLabel { background: transparent !important; } .edgeLabel p { padding: 8px 12px; border: 1px solid #45658c; border-radius: 16px; background: #0b1117; color: #a5c9ff; line-height: 1.4; }"
+}

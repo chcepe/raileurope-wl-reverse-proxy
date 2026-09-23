@@ -1,0 +1,26 @@
+flowchart TB
+    Browser["Traveller’s browser<br/>raileurope.com"]
+    subgraph RE["Rail Europe infrastructure"]
+        Router["raileurope.com<br/>Routing layer"]
+        Website["Existing Rail Europe website<br/>Landing page, blog, other content"]
+        Proxy["Reverse proxy<br/>Upstream: raileurope.wl.omio.com"]
+    end
+    subgraph Omio["Omio infrastructure"]
+        CF["Cloudflare<br/>Trust approved proxy IPs or secret header"]
+        WL["Rail Europe whitelabel<br/>raileurope.wl.omio.com"]
+        Links["Search entry<br/>/links/{linkId}"]
+        App["Booking application<br/>/app/*"]
+        Dependencies["Supporting APIs and assets<br/>Including /wl-* and /gcs-proxy/*"]
+    end
+    Browser -->|HTTPS requests| Router
+    Router -->|Existing content routes| Website
+    Router -->|"/links/*, /app/* and agreed dependencies"| Proxy
+    Proxy -->|"HTTPS · preserve path and query<br/>Upstream Host/SNI<br/>Agreed proxy authentication"| CF
+    CF --> WL
+    WL --> Links
+    WL --> App
+    WL --> Dependencies
+    Proxy -->|"Rewrite upstream redirects and URLs<br/>Adapt cookie domains<br/>Return response under raileurope.com"| Browser
+    classDef default fill:#071d38,stroke:#385675,color:#a5c9ff,rx:16,ry:16;
+    style RE fill:#19232f,stroke:#354456,color:#e3e8ef
+    style Omio fill:#19232f,stroke:#354456,color:#e3e8ef

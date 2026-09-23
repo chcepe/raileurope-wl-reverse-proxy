@@ -1,6 +1,6 @@
 # Rail Europe × Omio POC
 
-A Next.js / React / TypeScript landing site with a Node reverse proxy. Own pages stay on your domain; Omio supplies the search and booking application.
+A Next.js / React / TypeScript landing site with a Node reverse proxy. The read-only landing page mirrors Rail Europe’s visual layout; `/integration-overview` presents the Integration Overview: architecture, implemented proxy behavior, recorded validation, and remaining integration gaps. Own pages stay on your domain; Omio supplies the search and booking application.
 
 ## Run locally
 
@@ -13,7 +13,7 @@ npm run dev
 
 Open http://localhost:3000. For a production run, use `npm run build` followed by `npm start`.
 
-The form defaults to Berlin → Dresden, tomorrow in the browser’s local timezone, one adult. From/To are free text. Passenger counters use demo ages: Adult 35, Senior 65, Youth 12. Each category allows 0–9 passengers and the total must be at least one. Dates are recalculated at submission, including tabs left open overnight.
+The form defaults to Berlin → Dresden, tomorrow in the browser’s local timezone, one adult. The journey and passenger counts are read-only, as this is a minimal demonstration. Search remains active and uses one adult aged 35. Dates are recalculated at submission, including tabs left open overnight.
 
 ## Deploy to Vercel
 
@@ -31,7 +31,7 @@ Optional settings (copy `.env.example` to `.env.local` locally, or set in Vercel
 
 ## Routing and proxy behavior
 
-- `/`, `/blog`, `/imprint`, and Next.js assets belong to this project.
+- `/`, `/blog`, `/imprint`, `/terms-and-conditions`, `/privacy-policy`, `/integration-overview` (with `/diagram` redirecting to it), local public assets, and Next.js assets belong to this project.
 - All remaining paths go to the fixed upstream, including `/links/*`, `/app/*`, `/wl-*`, `/gcs-proxy/*`, and API paths. This fallback is deliberate: Omio’s dependencies extend beyond `/app/*`.
 - Search uses a full-page navigation to `/links/:id`. Omio’s loading page fetches `/links/:id/link`; the proxy rewrites its absolute JSON redirect to our origin.
 - Methods, query strings, bodies, statuses, and session cookies are forwarded. HTTP redirects and exact upstream-origin references in text are rewritten; third-party origins are preserved.
@@ -61,9 +61,15 @@ Smoke checks:
 1. Open and refresh `/`, `/blog`, and `/imprint`; use shared navigation.
 2. Search Berlin–Dresden. Confirm tomorrow, selected passengers, and results URL stay on the same origin.
 3. Check results, filters, and a train’s fare/class selection. Do not purchase a ticket.
-4. Check empty locations, zero passengers, keyboard controls, and narrow-screen layout.
+4. Check keyboard navigation, Search, the read-only journey details, `/integration-overview`, and narrow-screen layout.
 5. Repeat on the actual Vercel deployment, including refresh of a proxied application URL.
 
 Verified locally on 22 September 2026: live search results and onward train fare/class selection under localhost, local content pages, and keyboard passenger validation. Automated proxy/search tests, type checking, linting, and production build are part of the verification workflow. Production is deployed at https://raileurope-wl-reverse-proxy.vercel.app. Landing, blog, and imprint passed live checks. Search from Vercel is blocked by upstream Cloudflare security verification (Ray ID `a3f24e8bcc383982`); Omio infrastructure must authorize the intended proxy traffic. Payment and login remain unverified. Responsive CSS is included; mobile visual validation remains unverified because the browser viewport override did not apply reliably. Upstream emitted non-blocking experiment/auth/third-party widget errors during the smoke test; those integrations are not claimed working.
 
 Branch notes live in ignored `tmp/<branch-name>/`. No real legal/contact details are included in the demo imprint.
+
+## Visual assets and diagram
+
+Rail Europe logo is taken from the configured whitelabel. Paris hero photo: [Unsplash](https://images.unsplash.com/photo-1502602898657-3e91760cbb34), served locally. Reference layout follows the supplied Rail Europe screenshot; no live review score or nonfunctional booking controls are reproduced.
+
+Diagram source: `public/integration-diagram.mmd`; rendered SVG: `public/integration-diagram.svg`. Rendering is static, with no Mermaid runtime or editor shipped to the browser. Regenerate the SVG with Mermaid CLI after changing the source, using `docs/mermaid.config.json` and the dark background `#0b1117`.
