@@ -40,29 +40,24 @@ export default function IntegrationOverview() {
         Download Mermaid source ↓
       </a>
       <div className="integration-notes">
-        <section aria-labelledby="implemented-title">
-          <h2 id="implemented-title">What this demo implements</h2>
+        <section aria-labelledby="alignment-title">
+          <h2 id="alignment-title">Agree the integration details with Omio</h2>
           <ul>
-            <li><strong>Rail Europe pages:</strong> a branded landing page, Discover, Imprint, and placeholder Terms and Privacy pages stay in this Next.js site. My Bookings opens the proxied Omio application.</li>
-            <li><strong>Search handoff:</strong> the preset Berlin–Dresden journey sends one adult, age 35, through <code>/links/:id</code>. Tomorrow’s date is calculated when Search is selected.</li>
-            <li><strong>Same-domain proxy:</strong> Omio serves <code>/links/*</code>, <code>/app/*</code>, and supporting assets/API paths through a fixed upstream. HTTP redirects and the search link’s JSON redirect are rewritten to this site’s origin.</li>
-            <li><strong>Sessions and responses:</strong> applicable cookie domains become host-only while security flags remain intact. Text references to the upstream origin are rewritten; binary assets stream through. Shared caching is disabled.</li>
-            <li><strong>Local navigation fix:</strong> Omio drops the application prefix for journey links on localhost. A local-only redirect restores <code>/app/search-frontend</code> so fare selection can open.</li>
-            <li><strong>Deployment:</strong> Next.js route handlers provide the Node proxy on Vercel, without a separate backend or database. The deployment hostname is used automatically for rewritten links.</li>
+            <li><strong>Domains and routes.</strong> Share your test and production domains. Agree the full list of supporting API and asset paths, including any <code>/wl-*</code> and <code>/gcs-proxy/*</code> dependencies, and check for conflicts with existing Rail Europe routes.</li>
+            <li><strong>Proxy access.</strong> Provide the outbound IP addresses for each environment if they are fixed. Otherwise, agree a secret header with Omio and inject it only on the server. Omio configures the corresponding access rule; the public website hostname alone is not sufficient proof of trusted proxy traffic.</li>
+            <li><strong>Search and navigation.</strong> Confirm the link ID and the search parameters: <code>departurePosTerm</code>, <code>arrivalPosTerm</code>, <code>departureDate</code>, and <code>passengerAges</code>. Link My Bookings to <code>/app/your-bookings</code> on your own domain.</li>
+            <li><strong>Sessions and external services.</strong> Agree cookie handling, authentication callback URLs, and payment return URLs. Keep legitimate external payment and authentication destinations intact.</li>
           </ul>
         </section>
-        <section aria-labelledby="verified-title">
-          <h2 id="verified-title">What’s been verified</h2>
-          <p>Recorded checks from 22–23 September 2026: live search results and onward train fare/class selection loaded on localhost. Local content pages, diagram zoom and drag-to-pan were checked. Proxy/search tests, type checking, linting, and a production build passed during implementation.</p>
-          <p>The Vercel deployment served the landing page, Discover, and Imprint. This confirms the site deployment, not the complete booking flow.</p>
-        </section>
-        <section aria-labelledby="remaining-title">
-          <h2 id="remaining-title">What still needs work</h2>
+        <section aria-labelledby="launch-title">
+          <h2 id="launch-title">Validate on your domain before launch</h2>
           <ul>
-            <li><strong>Deployed search:</strong> the last Vercel check stopped at Omio’s Cloudflare security verification. Omio infrastructure needs to confirm how to authorize server-side proxy traffic; adding the public hostname alone has not been proven sufficient.</li>
-            <li><strong>Booking completion:</strong> login, My Bookings, payments, and third-party widgets need end-to-end verification on the deployment domain. Earlier checks also reported upstream experiment, authentication, and widget errors.</li>
-            <li><strong>Production readiness:</strong> replace placeholder content, validate mobile layouts, and review cookie/domain requirements and Vercel payload/runtime limits. This proxy does not support WebSocket upgrades.</li>
+            <li>Confirm your homepage, landing pages, editorial content, and legal pages still load normally.</li>
+            <li>Run a search through <code>/links/da69db62-5653-42f8-9b17-84830c319d08</code>, open results, and continue through fare selection. Refresh booking pages and check that assets and API requests load through the agreed routes.</li>
+            <li>Validate login, My Bookings, and the payment journey with Omio, including return navigation and session continuity.</li>
+            <li>Check mobile and desktop journeys, replace demo content with your approved content, and agree monitoring and a rollback plan for the routing change.</li>
           </ul>
+          <p>This POC demonstrates the proposed routing approach. It does not replace end-to-end validation on Rail Europe’s hosting and production domain.</p>
         </section>
       </div>
     </article>
