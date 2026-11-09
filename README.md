@@ -33,7 +33,7 @@ Optional settings (copy `.env.example` to `.env.local` locally, or set in Vercel
 
 - `/`, `/blog`, `/imprint`, `/integration-overview` (with `/diagram` redirecting to it), local public assets, and Next.js assets belong to this project.
 - All remaining paths go to the fixed upstream, including `/links/*`, `/app/*`, `/wl-*`, `/gcs-proxy/*`, and API paths. This fallback is deliberate: Omio’s dependencies extend beyond `/app/*`.
-- Search uses a full-page navigation to `/links/:id`. Omio’s loading page fetches `/links/:id/link`; the proxy rewrites its absolute JSON redirect to our origin.
+- Search opens `/links/:id` as usual. Omio’s loading page fetches `/links/:id/link`; the proxy rewrites its absolute JSON redirect to our origin. For this POC, the proxy also changes the transfer page's final navigation to replace its browser-history entry, so one Back from results returns to the landing page in the same-tab flow.
 - Methods, query strings, bodies, statuses, and session cookies are forwarded. HTTP redirects and exact upstream-origin references in text are rewritten; third-party origins are preserved.
 - Applicable upstream cookie domains become host-only. Separate cookies and security flags are preserved. Cookies for unrelated domains are dropped, matching browser rejection.
 - Binary responses stream through. Text is decoded and rewritten; original compression, length, and validator headers are removed. Proxy responses are private and not cached by shared CDNs.
@@ -59,10 +59,12 @@ npm run build
 Smoke checks:
 
 1. Open and refresh `/`, `/blog`, and `/imprint`; use shared navigation.
-2. Search Berlin–Dresden. Confirm tomorrow, selected passengers, and results URL stay on the same origin.
+2. With “Explore places to stay” off, search Berlin–Dresden. Confirm tomorrow, selected passengers, and results URL stay on the same origin. Press browser Back once from results and confirm the landing page returns.
 3. Check results, filters, and a train’s fare/class selection. Do not purchase a ticket.
 4. Check keyboard navigation, Search, the read-only journey details, `/integration-overview`, and narrow-screen layout.
 5. Repeat on the actual Vercel deployment, including refresh of a proxied application URL.
+
+The toggle-on demo opens whitelabel search in a new tab and sends the original tab to Booking.com. Browser Back in the new search tab cannot return to the landing page in the original tab. The POC uses preset journey values and does not validate restoration of Rail Europe's editable widget values. Its transfer-page rewrite depends on Omio's current HTML and needs an owned service change for a production-grade contract.
 
 Verified locally on 22 September 2026: live search results and onward train fare/class selection under localhost, local content pages, and keyboard passenger validation. Automated proxy/search tests, type checking, linting, and production build are part of the verification workflow. Production is deployed at https://raileurope-wl-reverse-proxy.vercel.app. Landing, blog, and imprint passed live checks. Search from Vercel is blocked by upstream Cloudflare security verification (Ray ID `a3f24e8bcc383982`); Omio infrastructure must authorize the intended proxy traffic. Payment and login remain unverified. Responsive CSS is included; mobile visual validation remains unverified because the browser viewport override did not apply reliably. Upstream emitted non-blocking experiment/auth/third-party widget errors during the smoke test; those integrations are not claimed working.
 

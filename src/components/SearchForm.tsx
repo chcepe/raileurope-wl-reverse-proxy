@@ -1,6 +1,6 @@
 "use client";
 
-import type { FormEvent } from "react";
+import { useState, type FormEvent } from "react";
 import {
   buildSearchUrl,
   passengerCategories,
@@ -10,9 +10,17 @@ import {
 const passengers: PassengerCounts = { adult: 1, senior: 0, youth: 0 };
 
 export function SearchForm() {
+  const [exploreStays, setExploreStays] = useState(false);
+
   function search(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
-    window.location.assign(buildSearchUrl("Berlin", "Dresden", passengers));
+    const searchUrl = buildSearchUrl("Berlin", "Dresden", passengers);
+    if (exploreStays) {
+      window.open(searchUrl, "_blank", "noopener,noreferrer");
+      window.location.assign("https://www.booking.com/searchresults.html?ss=Dresden");
+      return;
+    }
+    window.location.assign(searchUrl);
   }
 
   return (
@@ -75,6 +83,14 @@ export function SearchForm() {
           </svg>
           Search
         </button>
+        <label>
+          <input
+            type="checkbox"
+            checked={exploreStays}
+            onChange={(event) => setExploreStays(event.target.checked)}
+          />
+          Explore places to stay
+        </label>
         <p className="card-footnote">Tomorrow’s date is set when you search.</p>
       </div>
     </form>

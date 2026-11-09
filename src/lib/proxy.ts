@@ -194,11 +194,24 @@ export async function proxyRequest(request: Request): Promise<Response> {
       /^(text\/|application\/(?:json|[^;]+\+json|javascript|x-javascript|xml|[^;]+\+xml))/i.test(
         contentType,
       );
-    const body = noBody
-      ? null
-      : textual
-        ? rewriteText(await response.text(), upstream.origin, incoming.origin)
-        : response.body;
+    let body: string | ReadableStream<Uint8Array> | null = null;
+    if (!noBody) {
+      if (textual) {
+        body = rewriteText(await response.text(), upstream.origin, incoming.origin);
+        if (
+          /^\/links\/[^/]+\/?$/.test(incoming.pathname) &&
+          /^text\/html/i.test(contentType)
+        ) {
+          // POC-only: keep the normal Links transfer, but remove it from Back history.
+          body = body.replaceAll(
+            "window.location.href = redirectUrl;",
+            "window.location.replace(redirectUrl);",
+          );
+        }
+      } else {
+        body = response.body;
+      }
+    }
     return new Response(body, {
       status: response.status,
       statusText: response.statusText,

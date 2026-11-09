@@ -141,6 +141,17 @@ test("localhost journey links restore the Omio production prefix", async () => {
   );
 });
 
+test("Links transfer replaces its history entry before opening results", async (t) => {
+  t.mock.method(globalThis, "fetch", async () => new Response(
+    '<script>window.location.href = redirectUrl; window.location.href = "/";</script>',
+    { headers: { "content-type": "text/html" } },
+  ));
+  const response = await proxyRequest(new Request(`${local}/links/test-id?locale=en`));
+  assert.match(await response.text(), /window\.location\.replace\(redirectUrl\)/);
+  const other = await proxyRequest(new Request(`${local}/app/search-frontend`));
+  assert.match(await other.text(), /window\.location\.href = redirectUrl/);
+});
+
 
 test("approved User-Agent marker stays scoped to the Rail Europe upstream", async (t) => {
   const originalMarker = process.env.OMIO_WAF_USER_AGENT_MARKER;
