@@ -1,5 +1,6 @@
 import { ArchitectureViewer } from "@/components/ArchitectureViewer";
 import type { Metadata } from "next";
+import Link from "next/link";
 export const metadata: Metadata = {
   title: "Integration Overview | Rail Europe",
 };
@@ -17,6 +18,7 @@ export default function IntegrationOverview() {
           booking journey can share your domain.
         </p>
       </header>
+      <p><Link href="/back-navigation">See the browser Back navigation POC →</Link></p>
       <div className="integration-notes">
         <section aria-labelledby="partner-title">
           <h2 id="partner-title">What Rail Europe would implement</h2>

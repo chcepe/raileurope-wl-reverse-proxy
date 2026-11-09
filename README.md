@@ -31,7 +31,7 @@ Optional settings (copy `.env.example` to `.env.local` locally, or set in Vercel
 
 ## Routing and proxy behavior
 
-- `/`, `/blog`, `/imprint`, `/integration-overview` (with `/diagram` redirecting to it), local public assets, and Next.js assets belong to this project.
+- `/`, `/blog`, `/imprint`, `/integration-overview`, `/back-navigation` (with `/diagram` redirecting to the overview), local public assets, and Next.js assets belong to this project. The [browser Back POC page](/back-navigation) explains the history change and its limits.
 - All remaining paths go to the fixed upstream, including `/links/*`, `/app/*`, `/wl-*`, `/gcs-proxy/*`, and API paths. This fallback is deliberate: Omio’s dependencies extend beyond `/app/*`.
 - Search opens `/links/:id` as usual. Omio’s loading page fetches `/links/:id/link`; the proxy rewrites its absolute JSON redirect to our origin. For this POC, the proxy also changes the transfer page's final navigation to replace its browser-history entry, so one Back from results returns to the landing page in the same-tab flow.
 - Methods, query strings, bodies, statuses, and session cookies are forwarded. HTTP redirects and exact upstream-origin references in text are rewritten; third-party origins are preserved.
